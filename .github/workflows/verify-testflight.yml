@@ -1,0 +1,50 @@
+name: Verify existing Ember Todo TestFlight build
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_number:
+        description: Exact CFBundleVersion already uploaded to Apple
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Write App Store Connect key
+        env:
+          ASC_KEY_P8_BASE64: ${{ secrets.ASC_KEY_P8_BASE64 }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/private_keys"
+          echo "$ASC_KEY_P8_BASE64" | base64 --decode > "$RUNNER_TEMP/private_keys/AuthKey_${{ secrets.ASC_KEY_ID }}.p8"
+          chmod 600 "$RUNNER_TEMP/private_keys/AuthKey_${{ secrets.ASC_KEY_ID }}.p8"
+      - name: Verify exact build
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_KEY_PATH: ${{ runner.temp }}/private_keys/AuthKey_${{ secrets.ASC_KEY_ID }}.p8
+          ASC_APP_ID: "6804744496"
+          ASC_BETA_GROUP_ID: "3d5ddbd2-155d-440c-8946-49f7652d6e93"
+          BUILD_NUMBER: ${{ inputs.build_number }}
+          EVIDENCE_PATH: ${{ runner.temp }}/testflight-verification.txt
+        run: |
+          python3 -m venv "$RUNNER_TEMP/asc-venv"
+          "$RUNNER_TEMP/asc-venv/bin/pip" install --quiet PyJWT cryptography
+          "$RUNNER_TEMP/asc-venv/bin/python" scripts/verify_testflight.py
+      - name: Upload verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ember-todo-testflight-verification-${{ inputs.build_number }}
+          path: ${{ runner.temp }}/testflight-verification.txt
+          if-no-files-found: warn
+      - name: Clean API key
+        if: always()
+        run: find "$RUNNER_TEMP/private_keys" -type f -name '*.p8' -delete 2>/dev/null || true
+
