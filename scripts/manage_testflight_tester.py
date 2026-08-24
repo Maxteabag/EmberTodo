@@ -62,7 +62,10 @@ def main() -> None:
             "For an internal group, add the eligible App Store Connect user through Invite Testers first."
         )
 
-    tester = testers[0]
+    group_testers = relationship_ids(f"/betaGroups/{group_id}/relationships/betaTesters")
+    tester = next((row for row in testers if row["id"] in group_testers), None)
+    if tester is None:
+        tester = next((row for row in testers if row.get("attributes", {}).get("state")), testers[0])
     tester_id = tester["id"]
     attributes = tester.get("attributes", {})
     print(
@@ -78,7 +81,6 @@ def main() -> None:
         )
     )
 
-    group_testers = relationship_ids(f"/betaGroups/{group_id}/relationships/betaTesters")
     if tester_id not in group_testers:
         body = {"data": [{"type": "betaTesters", "id": tester_id}]}
         request(f"/betaGroups/{group_id}/relationships/betaTesters", "POST", body)
@@ -127,4 +129,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
