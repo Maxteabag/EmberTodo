@@ -1,0 +1,6 @@
+version: 1
+product: EmberTodo
+bundleID: com.peteradams.embertodo
+infoPath: Sources/EmberTodo/Resources/Info.plist
+iconPath: Sources/EmberTodo/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
+
