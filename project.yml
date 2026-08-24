@@ -8,9 +8,6 @@ settings:
     SWIFT_VERSION: "6.0"
     CODE_SIGN_STYLE: Manual
     DEVELOPMENT_TEAM: "2M8US99596"
-packages:
-  TodoCore:
-    path: .
 targets:
   EmberTodo:
     type: application
@@ -19,8 +16,7 @@ targets:
       - path: Sources/EmberTodo
         excludes:
           - Resources/Info.plist
-    dependencies:
-      - package: TodoCore
+      - path: Sources/TodoCore
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.peteradams.embertodo
@@ -44,4 +40,3 @@ schemes:
       config: Debug
     archive:
       config: Release
-

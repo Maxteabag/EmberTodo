@@ -1,6 +1,8 @@
 #if canImport(SwiftUI)
 import SwiftUI
+#if canImport(TodoCore)
 import TodoCore
+#endif
 
 struct TodoListView: View {
     @EnvironmentObject private var store: TodoStore

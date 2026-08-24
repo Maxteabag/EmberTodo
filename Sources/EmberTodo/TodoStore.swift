@@ -1,6 +1,8 @@
 #if canImport(SwiftUI)
 import Foundation
+#if canImport(TodoCore)
 import TodoCore
+#endif
 
 @MainActor
 final class TodoStore: ObservableObject {
