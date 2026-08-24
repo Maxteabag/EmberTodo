@@ -28,6 +28,7 @@ jobs:
           ASC_BETA_GROUP_ID: "3d5ddbd2-155d-440c-8946-49f7652d6e93"
           TESTER_EMAIL: "peter.w.adams96@gmail.com"
         run: |
+          set -euo pipefail
           python3 -m venv "$RUNNER_TEMP/asc-venv"
           "$RUNNER_TEMP/asc-venv/bin/pip" install --quiet PyJWT cryptography
           ASC_KEY_PATH="$HOME/.private_keys/AuthKey_${ASC_KEY_ID}.p8" \
@@ -43,4 +44,3 @@ jobs:
       - name: Clean API key
         if: always()
         run: find "$HOME/.private_keys" -type f -name 'AuthKey_*.p8' -delete 2>/dev/null || true
-
