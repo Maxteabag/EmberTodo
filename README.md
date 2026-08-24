@@ -18,3 +18,5 @@ The verified Linux compatibility pair is Swift 6.2.4 with the Apple Swift 6.2 / 
 ## Release
 
 The manual `Build and upload Ember Todo to TestFlight` workflow performs the authoritative Xcode archive, export, IPA metadata check, upload, exact-build processing poll, and internal beta-group verification. The standalone verifier can retry Apple-side processing for an already uploaded build without rebuilding.
+
+The release workflow is pinned to GitHub's `macos-26` image and Xcode 26.6. Before installing dependencies or decoding signing material, `scripts/verify_submission_sdk.sh 26` verifies that the selected iPhoneOS SDK satisfies Apple's current iOS 26 submission minimum.

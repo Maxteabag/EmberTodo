@@ -12,16 +12,19 @@ concurrency:
 
 jobs:
   build:
-    runs-on: macos-15
+    runs-on: macos-26
     timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
 
       - name: Show toolchain
         run: |
-          sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
+          sudo xcode-select -s /Applications/Xcode_26.6.app/Contents/Developer
           xcodebuild -version
           swift --version
+
+      - name: Verify Apple submission SDK minimum
+        run: scripts/verify_submission_sdk.sh 26
 
       - name: Install XcodeGen
         run: |
