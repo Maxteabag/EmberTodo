@@ -80,7 +80,8 @@ jobs:
 
       - name: Show archive diagnostics
         if: failure()
-        run: grep -nE ': (error|warning): |ARCHIVE FAILED|The following build commands failed' "$RUNNER_TEMP/archive.log" | tail -100 || true
+        run: |
+          grep -nE ': (error|warning): |ARCHIVE FAILED|The following build commands failed' "$RUNNER_TEMP/archive.log" | tail -100 || true
 
       - name: Export IPA
         run: |
@@ -152,4 +153,3 @@ jobs:
         run: |
           security delete-keychain "$KEYCHAIN" 2>/dev/null || true
           find "$RUNNER_TEMP" -maxdepth 2 -type f \( -name '*.p8' -o -name '*.p12' -o -name '*.mobileprovision' \) -delete
-
